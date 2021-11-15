@@ -1,0 +1,5 @@
+{
+  "ignoreTestFiles": "*.ts",
+  "baseUrl": "http://localhost:3000/",
+  "browser": "chrome"
+}
