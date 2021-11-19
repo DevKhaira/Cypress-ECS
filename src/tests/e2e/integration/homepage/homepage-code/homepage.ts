@@ -15,6 +15,7 @@ export class Homepage implements IHomepage {
         submit3: '[data-test-id="submit-3"]',
         submit4: '[data-test-id="submit-4"]',
     };
+
     public visit = () => {
         cy.visit('/');
         return this;
@@ -27,26 +28,25 @@ export class Homepage implements IHomepage {
     };
 
     private collectRow = (row) => {
-            const rowArray = [];
-            // turns every value into an integer and returns it into the row of the array
-            return cy.wrap(row).find('td').each(cell => {
-                rowArray.push(parseInt(cell.contents().text(), 10));
-            }).then(() => {
-                return rowArray
-            })
+        const rowArray = [];
+        // turns every value into an integer and returns it into the row of the array
+        return cy.wrap(row).find('td').each(cell => {
+            rowArray.push(parseInt(cell.contents().text(), 10));
+        }).then(() => {
+            return rowArray
+        })
     }
 
-    private placeArraysInRow = () => {
-            const tableArray = [];
-
-            return cy.get(this.selectors.tableRow).each( tableRow => {
-                //compiling each row and putting in the results into a table
-                this.collectRow(tableRow).then(row => {
-                    tableArray.push(row);
-                })
-            }).then(() => {
-                return tableArray;
+    private getValuesOfTheTable = () => {
+        const tableArray = [];
+        return cy.get(this.selectors.tableRow).each( tableRow => {
+            //compiling each row and putting in the results into a table
+            this.collectRow(tableRow).then(row => {
+                tableArray.push(row);
             })
+        }).then(() => {
+            return tableArray;
+        })
     }
 
     private checkWhereTheIndexIs = (row) => {
@@ -98,14 +98,13 @@ export class Homepage implements IHomepage {
                     return positionInArray;
                 }
             }
-        }
-        
+        }    
         return null;
     }
 
     public fillTheAnswersUp = () => {        
         //put rows in an array
-        const allTheData = this.placeArraysInRow();
+        const allTheData = this.getValuesOfTheTable();
         const finalCount = ['Dev Khaira'];
         return  allTheData.each(perRow => {
             finalCount.push(this.checkWhereTheIndexIs(perRow)===null? 'null': this.checkWhereTheIndexIs(perRow).toString());
