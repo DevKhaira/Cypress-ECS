@@ -85,6 +85,8 @@ export class Homepage implements IHomepage {
 
             } else {
                 positionInArray++;
+
+                //split the row into two arrays from the position in question
                 firstHalfOfAnArray = row.slice(0, positionInArray);
                 secondHalfOfAnArray = row.slice(positionInArray + 1);
 
