@@ -9,5 +9,5 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["./cypress/integration/*", "./cypress/integration/**/*"]
+  "include": ["src/tests/e2e/integration/*", "src/tests/e2e/integration/**/*"]
 }

@@ -1,5 +1,12 @@
 {
   "ignoreTestFiles": "*.ts",
   "baseUrl": "http://localhost:3000/",
-  "browser": "chrome"
+  "browser": "chrome",
+  "fixturesFolder": "src/tests/e2e/fixtures",
+  "integrationFolder": "src/tests/e2e/integration",
+  "pluginsFile": "src/tests/e2e/plugins/index.js",
+  "screenshotsFolder": "src/tests/e2e/screenshots",
+  "videosFolder": "src/tests/e2e/videos",
+  "downloadsFolder": "src/tests/e2e/downloads",
+  "supportFile": "src/tests/e2e/support/index.js"
 }

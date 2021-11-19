@@ -36,6 +36,7 @@ export class Homepage implements IHomepage {
     }
 
     private turnArrayIntoInteger = (row) => {
+       // grabbing each row 
        return this.compileArray(row).then(row => { 
             const rowArrayIntegers = row.map(function(x){
                          return parseInt(x,10);
@@ -46,7 +47,9 @@ export class Homepage implements IHomepage {
 
     private placeArraysInRow = () => {
             const tableArray = [];
+
             return cy.get(this.selectors.tableRow).each( row => {
+                //getting the arrays were all strings so I needed to convert them
                 this.turnArrayIntoInteger(row).then(integerArray => {
                     tableArray.push(integerArray);
                 })
@@ -55,47 +58,61 @@ export class Homepage implements IHomepage {
             })
     }
 
-    private checkWhereTheIndexIs = (information) => {
-        console.log(information.length/2);
-        let centre = Math.ceil(information.length/ 2);
-        let firstHalfOfAnArray = information.slice(0, centre);
-        let secondHalfOfAnArray= information.slice(centre);
+    private checkWhereTheIndexIs = (row) => {
+        const centreOfArray = Math.ceil(row.length/ 2);
+        let positionInArray = centreOfArray;
+        let firstHalfOfAnArray = row.slice(0, positionInArray);
+        let secondHalfOfAnArray= row.slice(positionInArray);
+                
         const addArraysUp = sectionOfArray => {
             return sectionOfArray.reduce(function (a, b) {
             return a + b;
           }, 0);
         }
-        let finish = false;
-        let result = null;
-        do{
+
+        // check if the sums are the same
+        const checkIfFirstHalfIsTheSameAsTheSecondHalf = (firstHalf, secondHalf) => addArraysUp(firstHalf) === addArraysUp(secondHalf);
+
+        // as this is a binary search (sort of), we won't need to check more than half the length of the array 
+        for (let i = 0; i < centreOfArray; i++) {
             if(addArraysUp(firstHalfOfAnArray).toString() > addArraysUp(secondHalfOfAnArray).toString()) {
-                centre--;
-                firstHalfOfAnArray = information.slice(0, centre);
-                secondHalfOfAnArray= information.slice(centre+1);
+                positionInArray--;
+
+                //split the row into two arrays from the position in question
+                firstHalfOfAnArray = row.slice(0, positionInArray);
+                secondHalfOfAnArray= row.slice(positionInArray+1);
+
+                //this will stop the search if the array goes back and forward
                 if(addArraysUp(firstHalfOfAnArray).toString() < addArraysUp(secondHalfOfAnArray).toString()) {
-                    finish = true;
-                } else if (addArraysUp(firstHalfOfAnArray).toString() === addArraysUp(secondHalfOfAnArray).toString()) {
-                    result = centre;
-                    finish = true;
+                    return null;
+
+                // this will stop the search and return the position if the sum of the first half is the same as the second half    
+                } else if (checkIfFirstHalfIsTheSameAsTheSecondHalf(firstHalfOfAnArray, secondHalfOfAnArray)) {
+                    i=centreOfArray;
+                    return positionInArray;
                 }
 
             } else {
-                centre ++;
-                firstHalfOfAnArray = information.slice(0, centre);
-                secondHalfOfAnArray= information.slice(centre+1);
+                positionInArray++;
+                firstHalfOfAnArray = row.slice(0, positionInArray);
+                secondHalfOfAnArray = row.slice(positionInArray + 1);
+
+                //this will stop the search if the array goes back and forward
                 if(addArraysUp(firstHalfOfAnArray).toString() > addArraysUp(secondHalfOfAnArray).toString()) {
-                    finish = true;
-                } else if (addArraysUp(firstHalfOfAnArray).toString() === addArraysUp(secondHalfOfAnArray).toString()) {
-                    result = centre;
-                    finish = true;
+                    return null;
+                
+                // this will stop the search and return the position if the sum of the first half is the same as the second half    
+                } else if (checkIfFirstHalfIsTheSameAsTheSecondHalf(firstHalfOfAnArray, secondHalfOfAnArray)) {
+                    i = centreOfArray;
+                    return positionInArray;
                 }
             }
-        } while(!finish)
+        }
         
-        return result;
+        return null;
     }
 
-    public addArrays = () => {        
+    public fillTheAnswersUp = () => {        
         //put rows in an array
         const allTheData = this.placeArraysInRow();
         const finalCount = ['Dev Khaira'];
