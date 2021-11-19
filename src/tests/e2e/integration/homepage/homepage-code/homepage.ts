@@ -26,32 +26,23 @@ export class Homepage implements IHomepage {
         return this;
     };
 
-    private compileArray = (row) => {
+    private collectRow = (row) => {
             const rowArray = [];
+            // turns every value into an integer and returns it into the row of the array
             return cy.wrap(row).find('td').each(cell => {
-                rowArray.push(cell.contents().text());
+                rowArray.push(parseInt(cell.contents().text(), 10));
             }).then(() => {
                 return rowArray
             })
     }
 
-    private turnArrayIntoInteger = (row) => {
-       // grabbing each row 
-       return this.compileArray(row).then(row => { 
-            const rowArrayIntegers = row.map(function(x){
-                         return parseInt(x,10);
-        })
-        return rowArrayIntegers
-    });
-}
-
     private placeArraysInRow = () => {
             const tableArray = [];
 
-            return cy.get(this.selectors.tableRow).each( row => {
-                //getting the arrays were all strings so I needed to convert them
-                this.turnArrayIntoInteger(row).then(integerArray => {
-                    tableArray.push(integerArray);
+            return cy.get(this.selectors.tableRow).each( tableRow => {
+                //compiling each row and putting in the results into a table
+                this.collectRow(tableRow).then(row => {
+                    tableArray.push(row);
                 })
             }).then(() => {
                 return tableArray;
@@ -85,10 +76,10 @@ export class Homepage implements IHomepage {
                 //this will stop the search if the array goes back and forward
                 if(addArraysUp(firstHalfOfAnArray).toString() < addArraysUp(secondHalfOfAnArray).toString()) {
                     return null;
+                };  
 
                 // this will stop the search and return the position if the sum of the first half is the same as the second half    
-                } else if (checkIfFirstHalfIsTheSameAsTheSecondHalf(firstHalfOfAnArray, secondHalfOfAnArray)) {
-                    i=centreOfArray;
+                if (checkIfFirstHalfIsTheSameAsTheSecondHalf(firstHalfOfAnArray, secondHalfOfAnArray)) {
                     return positionInArray;
                 }
 
@@ -100,10 +91,10 @@ export class Homepage implements IHomepage {
                 //this will stop the search if the array goes back and forward
                 if(addArraysUp(firstHalfOfAnArray).toString() > addArraysUp(secondHalfOfAnArray).toString()) {
                     return null;
+                }
                 
                 // this will stop the search and return the position if the sum of the first half is the same as the second half    
-                } else if (checkIfFirstHalfIsTheSameAsTheSecondHalf(firstHalfOfAnArray, secondHalfOfAnArray)) {
-                    i = centreOfArray;
+                if (checkIfFirstHalfIsTheSameAsTheSecondHalf(firstHalfOfAnArray, secondHalfOfAnArray)) {
                     return positionInArray;
                 }
             }
