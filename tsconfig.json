@@ -9,5 +9,5 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["src/tests/e2e/integration/*", "src/tests/e2e/integration/**/*"]
+  "include": ["src/test/e2e/integration/*", "src/test/e2e/integration/**/*"]
 }
